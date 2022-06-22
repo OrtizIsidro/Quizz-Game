@@ -87,6 +87,7 @@ const QuestionsBoard = ({ params }) => {
 
   return (
     <IndexQuestionsBoard
+      hola={"hola como estas"}
       loading={data ? false : true}
       element={cardElements?.[step]}
       alreadySelected={data?.[step].alreadySelected}
