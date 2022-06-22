@@ -12,14 +12,19 @@ const App = () => {
 
   const handleStep = () => setStep((st) => st + 1);
   const handleConfig = (config) => setConfig((st) => [...st, config]);
-  const handleNext = (config) => (handleConfig(config), handleStep());
+  const handleNext = (config) => {
+    console.log("run", config);
+    handleConfig(config);
+    handleStep();
+  };
 
   const elements = layaoutElements.map((lay) => (
     <OptionsLayout
       key={nanoid()}
       handleNext={handleNext}
       isConfig={true}
-      {...lay}
+      items={lay.items.map((item) => ({ value: item[0], search: item[1] }))}
+      title={lay.title}
     />
   ));
 

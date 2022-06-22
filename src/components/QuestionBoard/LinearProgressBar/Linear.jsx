@@ -1,6 +1,10 @@
-import { motion } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
+import { useEffect, useState } from "react";
 
-const CustomLinearProgress = ({ styleProps, attrProps }) => {
+const CustomLinearProgress = ({ styleProps, attrProps, controls }) => {
+  useEffect(() => {
+    controls.start({ x: "98%" });
+  }, []);
   return (
     <div
       style={{
@@ -23,7 +27,7 @@ const CustomLinearProgress = ({ styleProps, attrProps }) => {
           ...styleProps,
         }}
         transition={{ duration: 4 }}
-        animate={{ x: "97%" }}
+        animate={controls}
         {...attrProps}
       >
         q

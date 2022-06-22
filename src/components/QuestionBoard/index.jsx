@@ -2,6 +2,7 @@ import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import UndoIcon from "@mui/icons-material/Undo";
 import LinearProgressBar from "./LinearProgressBar/LinearProgress";
+import CustomLinearProgress from "./LinearProgressBar/Linear";
 export default function IndexQuestionsBoard({
   element,
   handleNext,

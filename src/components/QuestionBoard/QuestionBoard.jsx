@@ -6,13 +6,13 @@ import OptionsLayout from "../App/OptionsLayout";
 import { CircularProgress } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import Test from "../Test/Test";
+import { useAnimation } from "framer-motion";
 
 const QuestionsBoard = ({ params }) => {
   const [Category, Amount, Difficulty, typeApi] = params;
   const [step, setStep] = useState(0);
   const [data, setData] = useState(undefined);
   const [points, setPoints] = useState(0);
-  const [isFirst, setIsFirst] = useState(false);
   const POINT = 1;
   const STEP = 1;
   useEffect(() => {
@@ -26,69 +26,40 @@ const QuestionsBoard = ({ params }) => {
         setData(
           d.results.map((question) => ({
             ...question,
-            answers: shuffle(
-              [...question.incorrect_answers, question.correct_answer].map(
-                (value) => ({
-                  value,
-                  isCorrect: false,
-                  selected: false,
-                  id: nanoid(),
-                })
-              )
-            ),
-            id: nanoid(),
-            alreadySelected: false,
+            answers: shuffle([
+              ...question.incorrect_answers,
+              question.correct_answer,
+            ]),
           }))
         )
       )
       .catch((err) => console.log(err));
   }, [Amount, Category, Difficulty, typeApi]);
-
-  const handleSelect = (questionID, answerID) => {
-    return setData((prevSt) =>
-      prevSt.map((question) => {
-        if (question.id === questionID) {
-          if (question.alreadySelected) return question;
-          return {
-            ...question,
-            answers: question.answers.map((answer) => {
-              if (answer.id === answerID) {
-                if (answer.value === question.correct_answer)
-                  setPoints((st) => st + POINT);
-                return {
-                  ...answer,
-                  isCorrect: answer.value === question.correct_answer,
-                  selected: true,
-                };
-              }
-              return { ...answer, isCorrect: false, selected: false };
-            }),
-            alreadySelected: true,
-          };
-        }
-        return question;
-      })
-    );
-  };
   const handleNext = () => setStep((st) => st + STEP);
+  const controls = useAnimation();
 
   const cardElements = data?.map((card) => (
     <OptionsLayout
+      addPoint={() => setPoints((st) => st + POINT)}
+      controls={controls}
       key={nanoid()}
-      items={card.answers}
+      items={card.answers.map((item) => ({ value: item, id: nanoid() }))}
+      correct_answer={card.correct_answer}
       title={card.question}
-      handler={handleSelect}
-      handleSteps={handleNext}
-      questionID={card.id}
-      alreadySelected={card.alreadySelected}
       progress={true}
     />
   ));
 
   return (
-    <div>
-      <h1>hola como estas esto es una prueba</h1>
-    </div>
+    <IndexQuestionsBoard
+      loading={data ? false : true}
+      element={cardElements?.[step]}
+      alreadySelected={data?.[step].alreadySelected}
+      handleNext={handleNext}
+      points={points}
+      data={data}
+    />
   );
 };
+/// onClick pause else next
 export default QuestionsBoard;
