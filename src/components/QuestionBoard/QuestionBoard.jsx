@@ -86,15 +86,9 @@ const QuestionsBoard = ({ params }) => {
   ));
 
   return (
-    <IndexQuestionsBoard
-      hola={"hola como estas"}
-      loading={data ? false : true}
-      element={cardElements?.[step]}
-      alreadySelected={data?.[step].alreadySelected}
-      handleNext={handleNext}
-      points={points}
-      data={data}
-    />
+    <div>
+      <h1>hola como estas esto es una prueba</h1>
+    </div>
   );
 };
 export default QuestionsBoard;
