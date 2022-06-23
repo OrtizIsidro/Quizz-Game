@@ -4,16 +4,17 @@ import QuestionsBoard from "../QuestionBoard/QuestionBoard";
 import { layaoutElements } from "./helper";
 import OptionsLayout from "./OptionsLayout";
 import { nanoid } from "nanoid";
+import { useSelector, useDispatch } from "react-redux";
+import { increment } from "../../redux/appStepsReducer";
 const LAST_STEP = layaoutElements.length + 1;
 
 const App = () => {
-  const [step, setStep] = useState(1);
   const [config, setConfig] = useState([]);
-
-  const handleStep = () => setStep((st) => st + 1);
+  const step = useSelector((st) => st.app)["value"];
+  const dispatch = useDispatch();
+  const handleStep = () => dispatch(increment());
   const handleConfig = (config) => setConfig((st) => [...st, config]);
   const handleNext = (config) => {
-    console.log("run", config);
     handleConfig(config);
     handleStep();
   };

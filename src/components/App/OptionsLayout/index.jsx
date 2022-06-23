@@ -2,12 +2,11 @@ import { Container } from "@mui/system";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { CustomButtonWidth, styles } from "./helper";
+import { styles } from "./helper";
 import Input from "./Input/Input";
-import LinearProgressBar from "../../QuestionBoard/LinearProgressBar/LinearProgress";
 import CustomLinearProgress from "../../QuestionBoard/LinearProgressBar/Linear";
-import { nanoid } from "nanoid";
 import AnswersLayout from "./AnswersLayout";
+import HTMLReactParser from "html-react-parser";
 const OptionsLayout = ({
   items,
   title,
@@ -15,13 +14,11 @@ const OptionsLayout = ({
   correct_answer,
   handleNext,
   controls,
-  addPoint,
 }) => {
   const GRID_ITEMS =
     items.length > 0 ? (
       <AnswersLayout
-        addPoint={addPoint}
-        handleNext={handleNext}
+        handleNext={isConfig && handleNext}
         items={items}
         correct_answer={correct_answer}
         isConfig={isConfig}
@@ -32,18 +29,21 @@ const OptionsLayout = ({
     );
   return (
     <Container sx={styles}>
+      {!isConfig && (
+        <Box width="100vw" position={"absolute"} top={"0"}>
+          <CustomLinearProgress
+            nextStep={!isConfig && handleNext}
+            controls={controls}
+          />
+        </Box>
+      )}
       <Box textAlign="center">
-        <Typography variant="h5" component="h1" color="white" mb="40px">
-          {title}
+        <Typography variant="h5" component="h1" color="white" m="40px 0">
+          {HTMLReactParser(title)}
         </Typography>
       </Box>
       <Box>
-        {!isConfig && (
-          <Box width="100%">
-            <CustomLinearProgress controls={controls} />
-          </Box>
-        )}
-        <Grid container spacing={{ xs: 2, md: 10 }}>
+        <Grid container spacing={{ xs: 2, md: 6 }}>
           {GRID_ITEMS}
         </Grid>
       </Box>

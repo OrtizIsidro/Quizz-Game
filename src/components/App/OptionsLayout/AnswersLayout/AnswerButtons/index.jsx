@@ -1,6 +1,7 @@
 import { Grid } from "@mui/material";
 import { nanoid } from "nanoid";
 import { CustomButtonWidth } from "../../helper";
+import HTMLReactParser from "html-react-parser";
 
 const AnswersButtons = ({
   show,
@@ -27,9 +28,9 @@ const AnswersButtons = ({
         disabled={show && !selected ? DISABLED : NOT_DISABLED}
         variant={isConfig ? "contained" : show ? "contained" : "outlined"}
         color={show ? (isCorrect ? "success" : "error") : "primary"}
-        onClick={() => handler(isConfig ? search : id)}
+        onClick={() => (isConfig ? handler(search) : handler(id, value))}
       >
-        {value}
+        {HTMLReactParser(value)}
       </CustomButtonWidth>
     </Grid>
   );

@@ -1,20 +1,20 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import IndexQuestionsBoard from ".";
-import { nanoid } from "nanoid";
 import { shuffle } from "./helper";
-import OptionsLayout from "../App/OptionsLayout";
-import { CircularProgress } from "@mui/material";
-import { Box, Container } from "@mui/system";
-import Test from "../Test/Test";
 import { useAnimation } from "framer-motion";
+import OptionsLayout from "../App/OptionsLayout";
+import { nanoid } from "nanoid";
+import { useSelector, useDispatch } from "react-redux";
+import DashBoard from "../DashBoard/DashBoard";
+import { increment } from "../../redux/questionsBoardStepsReducer";
 
 const QuestionsBoard = ({ params }) => {
   const [Category, Amount, Difficulty, typeApi] = params;
-  const [step, setStep] = useState(0);
+  const step = useSelector((st) => st.questions)["value"];
+  const dispatch = useDispatch();
   const [data, setData] = useState(undefined);
-  const [points, setPoints] = useState(0);
-  const POINT = 1;
   const STEP = 1;
+  const LAST_STEP = data?.length - 1;
   useEffect(() => {
     fetch(
       `https://opentdb.com/api.php?amount=${Amount}&category=${Category}&difficulty=${Difficulty}${
@@ -35,29 +35,27 @@ const QuestionsBoard = ({ params }) => {
       )
       .catch((err) => console.log(err));
   }, [Amount, Category, Difficulty, typeApi]);
-  const handleNext = () => setStep((st) => st + STEP);
-  const controls = useAnimation();
+  const handleNext = () => dispatch(increment());
 
-  const cardElements = data?.map((card) => (
+  const controls = useAnimation();
+  const elements = data?.map((card) => (
     <OptionsLayout
-      addPoint={() => setPoints((st) => st + POINT)}
       controls={controls}
       key={nanoid()}
       items={card.answers.map((item) => ({ value: item, id: nanoid() }))}
       correct_answer={card.correct_answer}
       title={card.question}
+      handleNext={handleNext}
       progress={true}
     />
   ));
-
+  if (step === LAST_STEP) return <DashBoard />;
   return (
     <IndexQuestionsBoard
-      loading={data ? false : true}
-      element={cardElements?.[step]}
-      alreadySelected={data?.[step].alreadySelected}
-      handleNext={handleNext}
-      points={points}
       data={data}
+      handleNext={handleNext}
+      element={elements?.[step]}
+      key={nanoid()}
     />
   );
 };
